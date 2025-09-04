@@ -408,7 +408,7 @@
                 <ul class="nav-links">
                     <li><a href="#mission">Mission</a></li>
                     <li><a href="#projects">Projects</a></li>
-                    <li><a href="#join">Contact Us</a></li>
+                    <li><a href="#join">Join Us</a></li>
                     <li><a href="#about">About</a></li>
                 </ul>
             </nav>
@@ -434,10 +434,10 @@
 
     <section id="projects" class="projects">
         <div class="container">
-            <h2>Current Projects</h2>
+            <h2>Current Project</h2>
             <div class="project-card">
                 <h3>Improving Autism Navigation</h3>
-                <p>Developing comprehensive digital tools to help individuals with autism and their families navigate healthcare services, educational resources, and support systems across Canada. Our platform aims to reduce barriers, improve access to specialized care, and create clearer pathways through complex healthcare systems.</p>
+                <p>Developing comprehensive digital tools to help individuals with autism and their families navigate healthcare services and support systems across Canada. Our platform aims to reduce barriers, improve access to specialized care, and create clearer pathways through complex healthcare systems.</p>
             </div>
         </div>
     </section>
@@ -446,7 +446,28 @@
         <div class="container">
             <h2>Join the Movement</h2>
             <p>Ready to be part of the healthcare revolution? Whether you're a developer, healthcare professional, researcher, or simply passionate about making a difference, we'd love to hear from you.</p>
-            <p>Email us at: <b>future.health.innovations@gmail.com</b></p>
+
+            <div class="form-container">
+                <h3>Get Involved</h3>
+                <form id="contactForm"
+                      action="https://formspree.io/f/xqadgevd"
+                      method="POST"
+                >
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" placeholder="Tell us about your background and how you'd like to contribute..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
         </div>
     </section>
 
@@ -455,7 +476,7 @@
             <h2>About Us</h2>
             <div class="about-content">
                 <div class="about-text">
-                    <p>We are technology enthusiasts and healthcare believers united by a shared vision: that innovation can solve humanity's greatest health challenges. Our diverse team brings together expertise in software development, healthcare systems, user experience design, and clinical practice to create solutions that truly matter.</p>
+                    <p>We are technology enthusiasts and healthcare believers united by a shared vision: that innovation can solve humanity's greatest health challenges. Bringing together expertise in software development, user experience design, healthcare systems, and clinical practice to create solutions that truly matter.</p>
                 </div>
                 <div class="about-features">
                     <div class="feature">
@@ -479,6 +500,7 @@
 <footer>
     <div class="container">
         <p>&copy; 2025 Future Health Innovations. Building a healthier tomorrow through technology.</p>
+        <a href="mailto:future.health.innovations@gmail.com" style="color: rgba(255, 255, 255, 0.9); text-decoration: none; font-weight: 500; transition: color 0.3s ease;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255, 255, 255, 0.9)'">Contact Us</a>
     </div>
 </footer>
 
@@ -497,7 +519,57 @@
         });
     });
 
-    // Smooth scrolling for navigation links (no form handling needed)
+    // Form submission with Formspree
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const submitBtn = this.querySelector('.submit-btn');
+        const originalText = submitBtn.textContent;
+
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+
+        // Remove any existing status messages
+        const existingStatus = this.querySelector('.form-status');
+        if (existingStatus) {
+            existingStatus.remove();
+        }
+
+        try {
+            const formData = new FormData(this);
+            const response = await fetch('https://formspree.io/f/xqadgevd', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                // Success
+                const statusDiv = document.createElement('div');
+                statusDiv.className = 'form-status success';
+                statusDiv.textContent = 'Thank you! Your message has been sent successfully.';
+                this.appendChild(statusDiv);
+
+                // Reset form
+                this.reset();
+            } else {
+                throw new Error('Form submission failed');
+            }
+        } catch (error) {
+            // Error
+            const statusDiv = document.createElement('div');
+            statusDiv.className = 'form-status error';
+            statusDiv.textContent = 'Sorry, there was an error sending your message. Please try again.';
+            this.appendChild(statusDiv);
+        }
+
+        // Reset button
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+    });
 
     // Add scroll animations
     const observerOptions = {
